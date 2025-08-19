@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ebook;
+use App\Models\Ebooks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +12,7 @@ class EbookController extends Controller
 {
     public function index()
     {
-        $ebooks = Ebook::latest()->get();
+        $ebooks = Ebooks::latest()->get();
         return view('admin.ebooks.index', compact('ebooks'));
     }
 
@@ -40,7 +41,7 @@ class EbookController extends Controller
         ]);
 
         foreach ($request->ebooks as $ebookData) {
-            Ebook::create([
+            Ebooks::create([
                 ...$ebookData,
                 'coverage' => $ebookData['coverage'] ?? null,
                 'pdf' => $ebookData['pdf'] ?? null,
@@ -50,5 +51,13 @@ class EbookController extends Controller
         return redirect()->route('ebooks.index')->with('success', 'Ebooks created successfully!');
     }
 
-    // (Update and destroy can be built the same way)
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $path = $file->store('temp', 'public'); // Store temporarily in storage/app/public/temp
+            return response()->json(['path' => $path], 200);
+        }
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
 }

@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\EbookController;
-use App\Http\Controllers\Admin\FileUploadController;
+use App\Http\Controllers\EbookController;
+use App\Http\Controllers\FileUploadController;
 
 
 Route::get('/', function () {
@@ -14,3 +14,5 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::post('/file-upload', [FileUploadController::class, 'upload'])->name('file.upload');
+
+Route::post('/admin/ebooks/upload', [EbookController::class, 'upload'])->name('ebooks.upload');

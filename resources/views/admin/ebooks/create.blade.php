@@ -58,27 +58,20 @@ function initFilepond(slotId) {
     document.querySelectorAll(`#${slotId} input.filepond`).forEach(input => {
         let field = input.dataset.field;
         let slot = input.dataset.slot;
-
-        FilePond.create(input, {
+        FilePond.create(document.querySelector('input[type="file"]'), {
             server: {
                 process: {
-                    url: "{{ route('file.upload') }}",
+                    url: '/admin/ebooks/upload',
                     method: 'POST',
-                    withCredentials: false,
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
-                    onload: (res) => {
-                        let json = JSON.parse(res);
-                        let hidden = document.createElement('input');
-                        hidden.type = "hidden";
-                        hidden.name = `ebooks[${slot}][${field}]`;
-                        hidden.value = json.path;
-                        document.querySelector(`#${slotId}`).appendChild(hidden);
-                        return json.path;
-                    }
-                }
-            }
+                },
+                revert: null // optional: handle file removal
+            },
+            allowMultiple: false, // or true if needed
+            maxFileSize: '10MB',
+            acceptedFileTypes: ['application/pdf', 'image/*']
         });
     });
 }

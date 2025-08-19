@@ -6,7 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ebook extends Model
+class Ebooks extends Model
 {
     protected $fillable = [
         'title',
@@ -23,10 +23,4 @@ class Ebook extends Model
         'pdf',
         'coverage',
     ];
-
-    public function favoredBy()
-    {
-        return $this->belongsToMany(Account::class, 'account_ebook_favorite')->withTimestamps();
-    }
-
 }
